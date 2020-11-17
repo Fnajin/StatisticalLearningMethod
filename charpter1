@@ -1,3 +1,62 @@
-数据
+'''
+SupervisedLearning
+    input_data(X) output(Y)
+    predict = f(input_data|θ)
+    loss(0) = g(predict, output)
+    if loss->0 then predicted->output
 
+回归问题
+分类问题
+标注问题：输入与输出变量都是变量序列
+P(X,Y)
+训练数据与测试数据被看作是依联合概率分布P(X,Y)独立同分布产生的。
+学习系统和预测系统
+训练数据集-->学习系统-->得到模型Model：
+测试样本集-->预测系统-->根据模型Model-->获得预测
 
+损失函数度量模型一次预测的好坏
+风险函数度量平均意义下模型预测的好坏
+损失函数L(Y, f(X))
+风险函数riskFunction-期望损失expectedLoss-损失的期望Ep(L(Y, f(X)))：理论上模型f(X)关于联合分布P(X,Y)的平均意义下的损失，
+学习的目标就是选择期望风险最小的模型，但是P(X,Y)是未知的，因此才需要学习。
+
+模型f(X)关于训练数据集的平均损失称为经验风险(empiricalRisk)或经验损失(EmpiricalLoss)
+Remp(f) = (1/N) * (ΣL(yi, f(xi)))
+根据大数定律，当样本容量N趋于无穷时，经验风险趋于期望风险.
+经验风险最小化empirical risk minimization， ERM
+min（f∈F） Remp(f) ，F为假设空间
+'''
+print('hello')
+
+def ZeroOneLossFunc(Y, fX):
+    #0-1损失函数L(Y, f(X)) = 1 if Y!=f(X) else 0
+    pass
+def QuadraticLossFunc(Y, fX):
+    #平方损失函数L(Y, f(X)) = (Y - f(X))^2
+    pass
+def AbsoluteLossFunc(Y, fX):
+    #绝对损失函数L(Y, f(X)) = |Y - f(X)|
+    pass
+def LogarithmicLossFunc(Y, fX):
+    #对数损失函数
+    #loglikelihoodLossFunction对数似然损失函数
+    #L(Y, P(Y|X)) = -log(P(Y|X) 
+    pass
+def EmpiricalRisk(Y, X, f):
+    #经验风险R(f) = (1/N) * (ΣL(yi, f(xi)))
+    pass
+
+def StructualRisk(f):
+    #结构风险J(F)
+    pass
+'''
+结构风险最小化structual risk minimization， SRM-防止过拟合的一种策略，
+等价于正则化regularization,表示对模型复杂度的正则化项regularizer或罚项penaltyterm
+Rsrm = Rerm + λJ(F)
+J(F)表示模型复杂度
+
+1.4
+统计学习方法具体采用的损失函数 未必是 评估时使用的损失函数
+训练误差是模型关于训练数据集的平均损失
+测试误差是模型关于测试数据集的平均损失
+'''
