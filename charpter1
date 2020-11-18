@@ -59,4 +59,141 @@ J(F)表示模型复杂度
 统计学习方法具体采用的损失函数 未必是 评估时使用的损失函数
 训练误差是模型关于训练数据集的平均损失
 测试误差是模型关于测试数据集的平均损失
+误差率--准确率
+r_test + e_test = 1
+泛化能力generalization ability
+多项式
+f_M(x,w) = w0 +w1*x + w2*x^2 + ...+ w_M*x^M = Σ_(j=0->M)(w_j*x^j)
 '''
+import numpy as np
+x = np.linspace(start=0, stop=1, num=11, endpoint=True, retstep=False, dtype=None)
+print(x)
+y = np.sin(2*x*np.pi)
+noise = (2*np.random.rand(y.shape[0])-1)*0.1
+y = y+ noise
+print(y)
+
+import matplotlib.pyplot as plt
+plt.plot(x,y)
+plt.show()
+
+def f(x):
+    return x**3 + x**2 + x + 0
+print(QuadraticLossFunc(y, f(x)))
+
+'''
+1.5 正则化与交叉验证
+正则化regularization
+正则化项regularizer--一般是模型复杂度的单调递增函数
+罚项penalty term
+
+参数向量的L2范数  0.5*λ*||w||^2
+参数向量的L1范数  0.5*λ*||w||
+从贝叶斯估计的角度看，正则化项对应于模型的先验概率，可以假设复杂的模型有较大的
+先验概率，简单的模型有较小的先验概率，即选择复杂模型的概率比较高。
+
+交叉验证cross validation
+：重复地使用数据，把给定的数据机型切分，将切分的数据集组合为薰连接和测试集，在此基础上反复
+地进行训练、测试以及模型选择。
+训练集 --用于训练模型
+验证集 --用于模型的选择
+测试集 --用于最终对学习方法的评估
+'''
+
+import random
+#简单交叉验证
+def SimpleCrossValidation(X, train_rate = 0.7):
+    #随机地将已给数据分成两部分，一部分作为训练集合，另一部分作为测试集合，如70%+30%，然后用训练集合
+    #在各种条件下（如不同的参数个数）训练模型，从而得到不同的模型；在测试集合上评价各个模型的测试误差，
+    #选出测试误差最小的模型
+    nums = len(X)
+    selected = int(nums * train_rate)
+    
+    # 索引范围为[0, n), 随机选x个不重复
+    #index = random.sample(range(nums), X)#索引范围[0, n)
+    #return index
+    #或者
+    # 索引范围为[0, n)，随机选x个不重复，注意replace=False才是不重复，replace=True则有可能重复
+    #numpy.random.choice(a, size=None, replace=True, p=None)
+    #从a(只要是ndarray都可以，但必须是一维的)中随机抽取数字，并组成指定大小(size)的数组
+    #replace:True表示可以取相同数字，False表示不可以取相同数字
+    #数组p：与数组a相对应，表示取数组a中每个元素的概率，默认为选取每个元素的概率相同。
+    index = np.random.choice(np.arange(nums), size=selected, replace = False)
+    print(index)
+    print(x[index])
+    
+    #numpy.delete(arr, obj, axis=None)
+    test = np.delete(np.arange(nums), index)
+    print(test)
+    print(x[test])
+  
+    X_train, X_test = index, test
+    pass
+
+# 先根据上面的函数获取test_index
+#test_index = np.array(getRandomIndex(n, x))
+# 再讲test_index从总的index中减去就得到了train_index
+#train_index = np.delete(np.arange(n), test_index)
+SimpleCrossValidation(x)
+SimpleCrossValidation(x)
+SimpleCrossValidation(x)
+
+
+
+
+
+
+
+def SFoldCrossValidation(X):
+    '''S折交叉验证S-fold cross validation
+    首先随机地将已给数据切分为S个互不相交的大小相同的子集；
+    然后利用S-1个子集的数据训练模型，利用余下的子集测试模型；
+    将这一过程对可能的S中选择重复进行；
+    最后选出S次评测中平均测试误差最小的模型
+    '''
+    pass
+
+def LeaveOneOutCrossValidation(X):
+    '''
+    S折交叉验证的特殊情形是S=N，称为留意交叉验证 leave-one-out cross validation
+    往往在数据缺乏的情况下使用，N是给定数据集的容量
+    '''
+    pass
+
+'''
+泛化能力generalization ability
+泛化误差generalization error-用模型对未知数据预测的误差
+
+1.7
+模型的决策函数形式Y=f(X),条件概率分布形式P(Y|X)
+
+监督学习方法又可分为生成方法和判别方法
+生成方法generative approach-->生成模型generative model
+生成方法由数据学习联合概率分布P(X,Y),然后求出条件概率分布P(Y|X)作为预测的模型，
+    即生成模型P(Y|X) = P(X,Y)/P(X).
+    称为生成模型是因为模型表示了戈丁输入X产生输出Y的生成关系。
+    生成方法可以还原出联合概率分布P(X,Y),
+
+判别方法discriminative approach-->判别模型discriminative model
+    判别方法由数据直接学习决策函数f(X)或者条件概率分布P(Y|X)作为预测的模型，即
+    判别模型。判别方法关心的是对给定的输入X，对应预测什么样的输出Y。
+    判别方法直接学习的是条件概率P(Y|X)或者决策函数f(X),直接面对预测
+
+分类问题：
+    分类器classifier
+    学习系统由训练数据学习一个分类器P(Y|X)或Y=f(X)，
+    评价指标准确率accuracy，在测试集上分类正确的样本数与总样本数之比。
+
+对于二分类问题，还有精确率precision和召回率recall
+TP--真正类(正类预测为正类)
+FN--假负类(正类预测为负类)
+FP--假正类(负类预测为正类)
+TN--真负类(负类预测为负类)
+精确率P = TP/(TP+FP)     召回率R = TP/(TP+FN)
+
+F1值：2/F1 = 1/P + 1/R   ,F1 = 2*TP/(2*TP + FP + FN)
+
+1.10
+回归regression
+'''
+
