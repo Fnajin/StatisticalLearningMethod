@@ -1,0 +1,135 @@
+print('hello')
+
+
+'''
+k近邻 k-nearest neighbor, k-NN
+k近邻不具有显示的学习过程
+
+k近邻法的三基本要素
+  k值的选择
+  距离度量
+  分类决策规则
+
+K近邻法：
+  输入：训练数据集{(xi, yi)}, yi∈{c1, c2, ... ck},
+  输入：测试数据x所属的类y
+  (1)根据给定的距离度量，在训练集T中找出与x最近邻的k个点，涵盖这k个点的x的邻域记作Nk(x)
+  (2)在Nk(x)中根据分类决策规则(如多数表决)决定x的类别y:
+      y = arg max ΣI(yi=ci), I为指示函数
+
+当k=1时称为最近邻算法。
+
+3.2 k近邻模型
+特征空间中，对每个训练实例点xi，距离该点比其他更近的所有点组成一个区域，称为单元(cell)
+每个训练实例点拥有一个单元，所有训练实例点的单元构成对特征空间的一个划分。
+类标记class label
+
+距离度量
+  Minkowski 距离  Minkowski distanceLp距离   Lp distance
+    Lp(xi, xj) = ( Σ|xi - xj|^P)^(1/p)   ，
+    对应特征值差值的绝对值的P次幂， 求和，对和求1/p次幂， p>=1
+    当p = 2时， 为欧氏距离 Euclidean distance
+      L2(xi, xj) = ( Σ|xi - xj|^2)^(1/2)
+    当p = 1时，为曼哈顿距离 Manhattan distance
+      L1(xi, xj) = Σ|xi - xj|
+    当p = ∞时，它是各个坐标距离的最大值，即
+      L∞ = max |xi - xj|
+
+k值的选择
+
+'''
+def MinkowskiDistance(Xi, Xj, p=1):
+    if(len(Xi) != len(Xj)):
+        return -1
+    if p<1:
+        return -1
+    sum=0.
+    for index in range(len(Xi)):
+        sum = sum+ abs(Xi[index]-Xj[index])**p
+    print('sum:',sum)
+    print('rez:',sum**(1/p))
+    return sum**(1/p)
+
+'''
+xi=[1,1]
+xj=[0,0]
+
+indexs = []
+diss = []
+import matplotlib.pyplot as plt
+for i in range(10):
+    dis = (MinkowskiDistance(xi, xj, p=i))
+    indexs.append(i)
+    diss.append(dis)
+plt.plot(indexs, diss)
+plt.show()
+'''
+
+import numpy as np
+def KNN(x, X, Y, k=3, p=2):
+    
+    maxidx = []
+    maxdis = []
+    for i in range(len(X)):
+        dis = MinkowskiDistance(x, X[i], p)
+        
+        if len(knn)<=3:
+            maxidx.append(i)
+            maxdis.append(dis)
+        else:
+            index = maxdis.index(max(maxdis))
+            maxidx[index] = i
+            maxdis[index] = dis
+    cnts = np.zeros(len(Y))
+    for i in range(len(maxidx)):
+        cnts[maxidx[i]] +=1
+    return max(cnts)
+    pass
+
+
+'''
+k值的选择
+近似误差approximation error
+估计误差estimation error
+    k值减小则整体模型变得复杂，容易发生过拟合
+    k值较大模型变简单，易欠拟合
+    应用中，一般选一个较小的值，通过交叉验证法选取最优的k值
+    
+
+分类决策规则
+    多数表决规则majority voting rule
+    多数表决规则等价于经验风险最小化
+    
+    
+kd树
+    一种对k维空间中的实例点进行存储以便对其进行快速检索的属性数据结构
+    (1)构造根结点，使根结点对应于k为空间中包含所有实例点的超矩形区域；
+    通过下面的递归方法，不断地对k维空间进行切分，生成子节点。
+    在超矩形区域（结点）上选择一个坐标轴和在此坐标轴上的一个切分点，确定一个超平面，
+    这个超平面铜鼓选定的且分店并垂直于选定的坐标轴，将当前超矩形区域切分为左右两个
+    子区域（子结点），这时，实例被分到两个子区域。这个过程直到子区域内没有实例时终止，
+    终止时的结点为叶结点。在此过程中，将实例保存在响应的结点上。
+    通常，一次选择坐标轴对空间切分，选择训练实例点在选定坐标轴上的中位数（median）
+    为切分点，这样得到的kd树是平衡的，平衡的kd树搜索时的效率未必是最优的。
+    
+构造平衡kd数
+    输入:k维空间数据集T = {xi}
+    输出：kd树
+    
+中位数：
+    按顺序排列的一组数据中居于中间位置的数，可将数值集合划分为相等的上下两部分。
+    
+快速获取中位数的方法：
+    #均值np.mean(nums)
+    #中位数np.median(nums)
+'''
+#np.median(nums)
+def kdTree(X):
+    points = len(X)
+    pass
+
+'''
+搜索kd树
+
+'''
+print('over')
